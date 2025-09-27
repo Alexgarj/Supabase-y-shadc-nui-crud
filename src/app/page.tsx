@@ -1,27 +1,31 @@
 'use client'
-import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import TablaUsuarios from '@/components/TablaUsuarios';
-import FormularioUsuario from '@/components/FormularioUsuario';
-import DialogoConfirmacion from '@/components/DialogoConfirmacion';
+import { useState, useEffect } from 'react'
+import { toast } from 'sonner'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import TablaUsuarios from '@/components/TablaUsuarios'
+import FormularioUsuario from '@/components/FormularioUsuario'
+import DialogoConfirmacion from '@/components/DialogoConfirmacion'
 import {
   obtenerUsuarios, crearUsuario, actualizarUsuario, eliminarUsuario
-} from '@/lib/usuarios';
+} from '@/lib/usuarios'
 
+interface Usuario {
+  id: string
+  nombre: string
+  email: string
+}
 
 export default function HomePage() {
-  const [usuarios, setUsuarios] = useState([])
+  const [usuarios, setUsuarios] = useState<Usuario[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
   // Estados para modales
   const [modalFormulario, setModalFormulario] = useState(false)
   const [modalConfirmacion, setModalConfirmacion] = useState(false)
-  const [usuarioEditando, setUsuarioEditando] = useState(null)
-  const [usuarioEliminando, setUsuarioEliminando] = useState(null)
+  const [usuarioEditando, setUsuarioEditando] = useState<Usuario | null>(null)
+  const [usuarioEliminando, setUsuarioEliminando] = useState<Usuario | null>(null)
 
-
-  // Cargar usuarios al montar el componente 
   useEffect(() => {
     cargarUsuarios()
   }, [])
