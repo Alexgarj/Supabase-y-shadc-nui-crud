@@ -53,7 +53,7 @@ export default function TablaUsuarios({ usuarios, onEdit, onDelete, onNew, isLoa
                 <TableRow>
                   <TableHead>Nombre</TableHead>
                   <TableHead>Edad</TableHead>
-                  <TableHead>Género</TableHead>
+                  
                   <TableHead>Email</TableHead>
                   <TableHead>Usuario</TableHead>
                   <TableHead className="w-[100px]">Acciones</TableHead>
@@ -64,7 +64,7 @@ export default function TablaUsuarios({ usuarios, onEdit, onDelete, onNew, isLoa
                   <TableRow key={usuario.id}>
                     <TableCell className="font-medium">{usuario.nombre}</TableCell>
                     <TableCell>{usuario.edad}</TableCell>
-                    <TableCell>{usuario.genero}</TableCell>
+                    
                     <TableCell>{usuario.email}</TableCell>
                     <TableCell>{usuario.username}</TableCell>
                     <TableCell>

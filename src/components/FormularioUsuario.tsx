@@ -22,7 +22,6 @@ export default function FormularioUsuario({
   const [formData, setFormData] = useState<Omit<Usuario, 'id'>>({
     nombre: '',
     edad: 0,
-    genero: '',
     email: '',
     username: '',
     password: '',
@@ -34,7 +33,6 @@ export default function FormularioUsuario({
       setFormData({
         nombre: rest.nombre ?? '',
         edad: rest.edad ?? 0,
-        genero: rest.genero ?? '',
         email: rest.email ?? '',
         username: rest.username ?? '',
         password: rest.password ?? '',
@@ -81,15 +79,6 @@ export default function FormularioUsuario({
               value={formData.edad.toString()}
               onChange={handleChange}
               required
-            />
-          </div>
-          <div>
-            <Label htmlFor="genero">Género</Label>
-            <Input
-              id="genero"
-              name="genero"
-              value={formData.genero}
-              onChange={handleChange}
             />
           </div>
           <div>
