@@ -11,13 +11,7 @@ import {
   actualizarUsuario,
   eliminarUsuario
 } from '@/lib/usuarios'
-
-// Ajusta esta interfaz según tu tabla en Supabase
-interface Usuario {
-  id: string
-  nombre: string
-  email: string
-}
+import { Usuario } from '@/types/usuario'  // ✅ usar un único tipo
 
 export default function HomePage() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([])
@@ -61,7 +55,7 @@ export default function HomePage() {
     setModalConfirmacion(true)
   }
 
-  const handleSubmitFormulario = async (datosUsuario: Partial<Usuario>) => {
+  const handleSubmitFormulario = async (datosUsuario: Omit<Usuario, 'id'>) => {  // ✅ tipado más correcto
     setIsSubmitting(true)
     let result
     if (usuarioEditando) {
