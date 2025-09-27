@@ -13,7 +13,12 @@ interface FormularioUsuarioProps {
   isLoading?: boolean
 }
 
-export default function FormularioUsuario({ usuario, onSubmit, onCancel, isLoading = false }: FormularioUsuarioProps) {
+export default function FormularioUsuario({
+  usuario,
+  onSubmit,
+  onCancel,
+  isLoading = false,
+}: FormularioUsuarioProps) {
   const [formData, setFormData] = useState<Omit<Usuario, 'id'>>({
     nombre: '',
     edad: 0,
@@ -26,7 +31,14 @@ export default function FormularioUsuario({ usuario, onSubmit, onCancel, isLoadi
   useEffect(() => {
     if (usuario) {
       const { id, ...rest } = usuario
-      setFormData(rest)
+      setFormData({
+        nombre: rest.nombre ?? '',
+        edad: rest.edad ?? 0,
+        genero: rest.genero ?? '',
+        email: rest.email ?? '',
+        username: rest.username ?? '',
+        password: rest.password ?? '',
+      })
     }
   }, [usuario])
 
@@ -52,27 +64,65 @@ export default function FormularioUsuario({ usuario, onSubmit, onCancel, isLoadi
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="nombre">Nombre</Label>
-            <Input id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} required />
+            <Input
+              id="nombre"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div>
             <Label htmlFor="edad">Edad</Label>
-            <Input id="edad" name="edad" type="number" value={formData.edad} onChange={handleChange} required />
+            <Input
+              id="edad"
+              name="edad"
+              type="number"
+              value={formData.edad.toString()}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div>
             <Label htmlFor="genero">Género</Label>
-            <Input id="genero" name="genero" value={formData.genero} onChange={handleChange} />
+            <Input
+              id="genero"
+              name="genero"
+              value={formData.genero}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div>
             <Label htmlFor="username">Usuario</Label>
-            <Input id="username" name="username" value={formData.username} onChange={handleChange} required />
+            <Input
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div>
             <Label htmlFor="password">Contraseña</Label>
-            <Input id="password" name="password" type="password" value={formData.password} onChange={handleChange} required />
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="flex gap-2">
@@ -90,6 +140,3 @@ export default function FormularioUsuario({ usuario, onSubmit, onCancel, isLoadi
     </Card>
   )
 }
-
-
-
