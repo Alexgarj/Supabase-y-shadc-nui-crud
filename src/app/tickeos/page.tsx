@@ -12,11 +12,17 @@ export default function PageTickeos() {
   const [showForm, setShowForm] = useState(false)
 
   async function loadRows() {
-    setIsLoading(true)
-    const res = await getAllTickeos()
-    if (res.data) setRows(res.data)
-    setIsLoading(false)
+  setIsLoading(true)
+  const res = await getAllTickeos()
+  if (res.data) {
+    const normalized = res.data.map((tickeo) => ({
+      ...tickeo,
+      usuarios: Array.isArray(tickeo.usuarios) ? tickeo.usuarios[0] : tickeo.usuarios
+    }))
+    setRows(normalized as Tickeo[])
   }
+  setIsLoading(false)
+}
 
   useEffect(() => {
     loadRows()
