@@ -88,6 +88,8 @@ export default function FormularioTickeo({
             <Label htmlFor="usuario">Usuario</Label>
             <select
               id="usuario"
+              name="usuario"
+              aria-label="Seleccionar usuario"   // <-- reforzamos accesibilidad
               value={idUsuario}
               onChange={(e) => setIdUsuario(e.target.value)}
               required
@@ -142,6 +144,8 @@ export default function FormularioTickeo({
             <Label htmlFor="tipo">Tipo</Label>
             <select
               id="tipo"
+              name="tipo"
+              aria-label="Seleccionar tipo"      // <-- reforzamos accesibilidad
               value={tipo}
               onChange={(e) => setTipo(e.target.value)}
               required
