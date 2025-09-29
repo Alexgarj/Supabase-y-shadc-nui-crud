@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/FormularioCargo.js", "src/components/FormularioTickeo.js", "src/components/FormularioUsuario.js", "src/app/cargos/page.tsx", "src/lib/usuarios.js", "src/lib/tickeos.js"],
   "exclude": ["node_modules"]
 }

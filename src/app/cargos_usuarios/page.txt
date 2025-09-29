@@ -1,0 +1,65 @@
+'use client'
+import React, { useEffect, useState } from 'react'
+import TablaCargosUsuarios from '@/components/TablaCargosUsuarios'
+import FormularioCargoUsuario from '@/components/FormularioCargoUsuario'
+import { getAllCargosUsuarios, deleteCargoUsuario } from '@/lib/cargosUsuarios'
+import { CargoUsuario } from '@/types/cargoUsuario'
+
+export default function PageCargosUsuarios() {
+  const [rows, setRows] = useState<CargoUsuario[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [editingRow, setEditingRow] = useState<CargoUsuario | null>(null)
+  const [showForm, setShowForm] = useState(false)
+
+  async function loadRows() {
+    setIsLoading(true)
+    const res = await getAllCargosUsuarios()
+    if (res.data) setRows(res.data)
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    loadRows()
+  }, [])
+
+  async function handleDelete(row: CargoUsuario) {
+    if (confirm(`¿Eliminar asignación?`)) {
+      await deleteCargoUsuario(row.id!)
+      loadRows()
+    }
+  }
+
+  return (
+    <div className="p-4">
+      {showForm ? (
+        <FormularioCargoUsuario
+          editingId={editingRow?.id}
+          initialData={editingRow}
+          onSaved={() => {
+            setShowForm(false)
+            setEditingRow(null)
+            loadRows()
+          }}
+          onCancel={() => {
+            setShowForm(false)
+            setEditingRow(null)
+          }}
+        />
+      ) : (
+        <TablaCargosUsuarios
+          cargosUsuarios={rows}
+          isLoading={isLoading}
+          onEdit={(r) => {
+            setEditingRow(r)
+            setShowForm(true)
+          }}
+          onDelete={handleDelete}
+          onNew={() => {
+            setEditingRow(null)
+            setShowForm(true)
+          }}
+        />
+      )}
+    </div>
+  )
+}

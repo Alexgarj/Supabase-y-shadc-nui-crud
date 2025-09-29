@@ -1,169 +1,58 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { toast } from 'sonner'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import TablaUsuarios from '@/components/TablaUsuarios'
-import FormularioUsuario from '@/components/FormularioUsuario'
-import DialogoConfirmacion from '@/components/DialogoConfirmacion'
-import {
-  obtenerUsuarios,
-  crearUsuario,
-  actualizarUsuario,
-  eliminarUsuario
-} from '@/lib/usuarios'
-import { Usuario } from '@/types/usuario'  // ✅ usar un único tipo
+import React from 'react'
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Users, Briefcase, UserCog, Clock, ClipboardList } from 'lucide-react'
 
-export default function HomePage() {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // Estados para modales
-  const [modalFormulario, setModalFormulario] = useState(false)
-  const [modalConfirmacion, setModalConfirmacion] = useState(false)
-  const [usuarioEditando, setUsuarioEditando] = useState<Usuario | null>(null)
-  const [usuarioEliminando, setUsuarioEliminando] = useState<Usuario | null>(null)
-
-  // Cargar usuarios al montar el componente
-  useEffect(() => {
-    cargarUsuarios()
-  }, [])
-
-  const cargarUsuarios = async () => {
-    setIsLoading(true)
-    const { data, error } = await obtenerUsuarios()
-    if (error) {
-      toast.error('Error al cargar usuarios: ' + error)
-    } else {
-      setUsuarios(data || [])
-    }
-    setIsLoading(false)
-  }
-
-  const handleNuevoUsuario = () => {
-    setUsuarioEditando(null)
-    setModalFormulario(true)
-  }
-
-  const handleEditarUsuario = (usuario: Usuario) => {
-    setUsuarioEditando(usuario)
-    setModalFormulario(true)
-  }
-
-  const handleEliminarUsuario = (usuario: Usuario) => {
-    setUsuarioEliminando(usuario)
-    setModalConfirmacion(true)
-  }
-
-  const handleSubmitFormulario = async (datosUsuario: Omit<Usuario, 'id'>) => {  // ✅ tipado más correcto
-    setIsSubmitting(true)
-    let result
-    if (usuarioEditando) {
-      result = await actualizarUsuario(usuarioEditando.id, datosUsuario)
-    } else {
-      result = await crearUsuario(datosUsuario)
-    }
-
-    if (result.error) {
-      toast.error(
-        usuarioEditando
-          ? 'Error al actualizar usuario: ' + result.error
-          : 'Error al crear usuario: ' + result.error
-      )
-    } else {
-      toast.success(
-        usuarioEditando
-          ? 'Usuario actualizado correctamente'
-          : 'Usuario creado correctamente'
-      )
-      setModalFormulario(false)
-      cargarUsuarios()
-    }
-    setIsSubmitting(false)
-  }
-
-  const handleConfirmarEliminacion = async () => {
-    if (!usuarioEliminando) return
-    setIsSubmitting(true)
-    const result = await eliminarUsuario(usuarioEliminando.id)
-
-    if (result.error) {
-      toast.error('Error al eliminar usuario: ' + result.error)
-    } else {
-      toast.success('Usuario eliminado correctamente')
-      setModalConfirmacion(false)
-      setUsuarioEliminando(null)
-      cargarUsuarios()
-    }
-    setIsSubmitting(false)
-  }
-
-  const cerrarModalFormulario = () => {
-    if (!isSubmitting) {
-      setModalFormulario(false)
-      setUsuarioEditando(null)
-    }
-  }
-
-  const cerrarModalConfirmacion = () => {
-    if (!isSubmitting) {
-      setModalConfirmacion(false)
-      setUsuarioEliminando(null)
-    }
-  }
+export default function DashboardPage() {
+  const modules = [
+    {
+      title: 'Usuarios',
+      description: 'Gestión de usuarios registrados',
+      href: '/usuarios',
+      icon: <Users className="h-8 w-8 text-blue-600" />,
+    },
+    {
+      title: 'Cargos',
+      description: 'Administrar los cargos de la institución',
+      href: '/cargos',
+      icon: <Briefcase className="h-8 w-8 text-green-600" />,
+    },
+    
+    {
+      title: 'Horarios',
+      description: 'Definición y control de horarios',
+      href: '/horarios',
+      icon: <Clock className="h-8 w-8 text-orange-600" />,
+    },
+    {
+      title: 'Tickeos',
+      description: 'Registro de entradas y salidas',
+      href: '/tickeos',
+      icon: <ClipboardList className="h-8 w-8 text-red-600" />,
+    },
+  ]
 
   return (
-    <main className="container mx-auto py-8 px-4">
-      <div className="space-y-6">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight">Gestión de Usuarios</h1>
-          <p className="text-muted-foreground">
-            Sistema CRUD con Next.js 15, Supabase y shadcn/ui
-          </p>
-        </div>
-
-        <TablaUsuarios
-          usuarios={usuarios}
-          onNew={handleNuevoUsuario}
-          onEdit={handleEditarUsuario}
-          onDelete={handleEliminarUsuario}
-          isLoading={isLoading}
-        />
+    <main className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Panel de Control</h1>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {modules.map((mod) => (
+          <Card key={mod.href} className="shadow-md hover:shadow-lg transition">
+            <CardHeader className="flex items-center space-x-4">
+              {mod.icon}
+              <CardTitle>{mod.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">{mod.description}</p>
+              <Link href={mod.href}>
+                <Button className="w-full">Ir a {mod.title}</Button>
+              </Link>
+            </CardContent>
+          </Card>
+        ))}
       </div>
-
-      {/* Modal de formulario */}
-      <Dialog open={modalFormulario} onOpenChange={cerrarModalFormulario}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>
-              {usuarioEditando ? 'Editar Usuario' : 'Nuevo Usuario'}
-            </DialogTitle>
-          </DialogHeader>
-          <FormularioUsuario
-            usuario={usuarioEditando}
-            onSubmit={handleSubmitFormulario}
-            onCancel={cerrarModalFormulario}
-            isLoading={isSubmitting}
-          />
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal de confirmación para eliminar */}
-      <DialogoConfirmacion
-        open={modalConfirmacion}
-        onOpenChange={cerrarModalConfirmacion}
-        onConfirm={handleConfirmarEliminacion}
-        title="Eliminar Usuario"
-        description={
-          usuarioEliminando
-            ? `¿Estás seguro de que deseas eliminar a "${usuarioEliminando.nombre}"? Esta acción no se puede deshacer.`
-            : ''
-        }
-        confirmText="Eliminar"
-        cancelText="Cancelar"
-        isDestructive={true}
-        isLoading={isSubmitting}
-      />
     </main>
   )
 }
